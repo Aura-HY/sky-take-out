@@ -23,10 +23,14 @@ import java.util.Map;
 /**
  * 员工管理
  */
+//@RestController用于声明一个类是Spring MVC的控制器，并且每个处理方法的返回值会自动转换为JSON或XML格式
+//直接写入HTTP响应体，而不是返回一个视图（HTML等）
 @RestController
-//生成接口文档注解
+// @RequestMapping 为该类中所有处理方法定义了基础路径
 @RequestMapping("/admin/employee")
+//@Slf4j简化日志的使用
 @Slf4j
+//生成接口文档注解
 @Api(tags = "员工相关接口" )
 public class EmployeeController {
 
@@ -107,7 +111,7 @@ public class EmployeeController {
     }
 
     /**
-     * 员工分页查询
+     * 启用禁用员工账号
      *
      * @param status
      * @param id
@@ -118,6 +122,33 @@ public class EmployeeController {
     public Result startOrStop(@PathVariable Integer status,Long id ){
         log.info("启用禁用员工账号,{},{}",status,id);
         employeeService.startOrStop(status,id);
+        return Result.success();
+    }
+
+    /**
+     * 根据id查询员工
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("查询员工信息")
+    public Result<Employee> getEmployeeInfoById(@PathVariable Long id){
+        Employee employee = employeeService.getEmployeeInfoById(id);
+        return Result.success(employee);
+    }
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO
+     * @return
+     */
+    @PutMapping("")
+    @ApiOperation("编辑员工信息")
+    public Result editEmployeeInfo(@RequestBody EmployeeDTO employeeDTO){
+        log.info("编辑员工，{}",employeeDTO);
+        employeeService.editEmployeeInfo(employeeDTO);
         return Result.success();
     }
 }

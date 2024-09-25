@@ -5,6 +5,8 @@ import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.result.PageResult;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.PutMapping;
 
 public interface EmployeeService {
 
@@ -38,4 +40,20 @@ public interface EmployeeService {
      * @return
      */
     void startOrStop(Integer status, Long id);
+
+    /**
+     * 根据id查询员工
+     *
+     * @param id
+     * @return
+     */
+    Employee getEmployeeInfoById(Long id);
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO
+     * @return
+     */
+    void editEmployeeInfo(EmployeeDTO employeeDTO);
 }

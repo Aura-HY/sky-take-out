@@ -15,11 +15,13 @@ import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
+import io.swagger.annotations.ApiOperation;
 import lombok.var;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -90,12 +92,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
         //设置创建时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        //employee.setCreateTime(LocalDateTime.now());
+        //employee.setUpdateTime(LocalDateTime.now());
 
         //设置当前记录创建人id和修改人id
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+        //employee.setCreateUser(BaseContext.getCurrentId());
+        //employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
     }
@@ -128,6 +130,40 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .id(id)
                 .build();
 
+        employeeMapper.update(employee);
+
+    }
+
+    /**
+     * 根据id查询员工
+     *
+     * @param id
+     * @return
+     */
+    public Employee getEmployeeInfoById(Long id){
+        Employee employee = employeeMapper.getEmployeeInfoById(id);
+
+        employee.setPassword("******");
+
+        return employee;
+    }
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO
+     * @return
+     */
+    public void editEmployeeInfo(EmployeeDTO employeeDTO){
+        //可以直接用之前写好的update，但是那个参数是employee
+        //所以现在要做转换，用到拷贝，然后再赋值，赋值当前用户id的时候要用到baseContext
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+
+        //employee.setUpdateTime(LocalDateTime.now());
+       // employee.setUpdateUser(BaseContext.getCurrentId());
+
+        //在查询语句有报错，原因为命名
         employeeMapper.update(employee);
 
     }
